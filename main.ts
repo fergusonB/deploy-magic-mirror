@@ -2,6 +2,7 @@
 const options = {
     home: Deno.env.get('HOMEADDRESS') ?? 'laguna+beach',
     work: Deno.env.get('WORKADDRESS') ?? 'newport+beach',
+    articles: Deno.env.get('ARTICLES') ?? 10
 
 }
 // initialize globals
@@ -10,6 +11,9 @@ let data = {}
 
 // import oak middleware for deno http server
 import { Application } from "https://deno.land/x/oak@v9.0.0/mod.ts";
+
+// import Deno DOM for parsing news
+import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.14-alpha/deno-dom-wasm.ts";
 
 // Create a new oak application
 const app = new Application();
@@ -37,13 +41,24 @@ async function callData(){
     // Parse Weather
 
     // Parse News
-
+    async function getNews(){
+        const page = await fetch('https://apnews.com/hub/ap-top-news')
+        const html = await page.text()
+        const doc = new DOMParser().parseFromString(html,'text/html')!
+        const articles = await doc.querySelectorAll('div.FeedCard')
+        const articleList = []
+        for (let i = 0; i < options.articles; i++){
+            articleList.push(articles[i].textContent)
+        }
+        return articleList
+    }
     
     // Check if data needs to update + update, else return existing data from global
     if (time + 1800000 < new Date().getTime() || time === 0){
         time = new Date().getTime()
         data = {
             timeToWork: await getTimeToWork(),
+            news: await getNews()
         }
         console.log('refreshed data at ' + time)
     }
