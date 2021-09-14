@@ -2,9 +2,10 @@
 const options = {
     home: Deno.env.get('HOMEADDRESS') ?? 'laguna+beach',
     work: Deno.env.get('WORKADDRESS') ?? 'newport+beach',
-    articles: Deno.env.get('ARTICLES') ?? 10
-
+    articles: Deno.env.get('ARTICLES') ?? 10,
+    location: Deno.env.get('LOCATION') ?? [34.05,-118.24,'America%2FLos_Angeles']
 }
+console.log(options.location)
 // initialize globals
 let time = 0
 let data = {}
@@ -23,7 +24,7 @@ app.use(async (ctx) => {
     const data = await callData()
     ctx.response.body = await data
 });
-await app.listen({ port: 8000 });
+await app.listen({ port: 3000 });
 
 
 
@@ -39,6 +40,10 @@ async function callData(){
     }
 
     // Parse Weather
+    async function getWeather(){
+        const weather = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${options.location[0]}&longitude=${options.location[1]}&hourly=relativehumitidy_2m,apparent_temperature,precipitation,cloudcover,windspeed_10m&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&timezone=${options.location[2]}`)
+        return await weather.json()
+    }
 
     // Parse News
     async function getNews(){
@@ -58,7 +63,8 @@ async function callData(){
         time = new Date().getTime()
         data = {
             timeToWork: await getTimeToWork(),
-            news: await getNews()
+            news: await getNews(),
+            weather: await getWeather()
         }
         console.log('refreshed data at ' + time)
     }
