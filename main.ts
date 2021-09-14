@@ -1,7 +1,7 @@
 // Configurable options
 const options = {
-    home:'your address here'.replace(' ','+'),
-    work:'your work address here'.replace(' ','+'),
+    home: Deno.env.get('HOMEADDRESS') ?? 'laguna+beach',
+    work: Deno.env.get('WORKADDRESS') ?? 'newport+beach',
 
 }
 // initialize globals
@@ -33,6 +33,7 @@ async function callData(){
         const time = html.match(/\d+ min/)??[0] ?? 'not found'
         return String(time)
     }
+
     // Parse Weather
 
     // Parse News
@@ -44,10 +45,9 @@ async function callData(){
         data = {
             timeToWork: await getTimeToWork(),
         }
+        console.log('refreshed data at ' + time)
     }
-    else{
-        return data
-    }
+    return data
 }
 
 
