@@ -11,6 +11,14 @@
             color: #FFFFFF;
             font-family: "Roboto", sans-serif;
         }
+        #main{
+            /* grid layout, 2 columns */
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            /* set the padding to 10px */
+            padding: 1em;
+
+        }
     </style>
 </head>
 <body>
@@ -20,12 +28,18 @@
         Loading...
     </div>
 
-    <div id="timeToWork"></div>
+    <div id="main">
+            
+        <div id="clock"></div>
 
-    <div id="weather"></div>
+        <div id="timeToWork"></div>
+        <div id="news">
+            <h2>News</h2>
+        </div>
 
-    <div id="news">
-        <h1>News</h1>
+        <div id="weather"></div>
+
+  
     </div>
 
     <script>
@@ -46,21 +60,40 @@
 
         fetchData().then(data => {
             document.getElementById('loading').remove();
-            document.getElementById('timeToWork').innerHTML = `It will take ${data.timeToWork} to get to work`;
+            document.getElementById('timeToWork').innerHTML = `<h2>Commute: ${data.timeToWork}</h2>`;
             // updates the news, providing a p element for each article
             const news = document.getElementById('news');
             data.news.forEach(article => {
                 const articleTitle = article.split('By')[0]
                 const articleContent = article.split('GMT')[1]
                 const p = document.createElement('p');
-                p.innerHTML = `<h2>${articleTitle}</h2>${articleContent}`;
+                p.innerHTML = `<h3>${articleTitle}</h3>${articleContent}`;
                 news.appendChild(p);
                 
                 
             });
+            // updates the weather
+            
 
 
         });
+
+        // displays and updates the clock in 12 hour am/pm format
+        function updateClock() {
+            const date = new Date();
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const seconds = date.getSeconds();
+            const ampm = hours >= 12 ? 'pm' : 'am';
+            const hours12 = hours % 12;
+            const clock = document.getElementById('clock');
+            // if seconds is less than 10, add a leading 0
+            const secondsString = seconds < 10 ? `0${seconds}` : seconds;
+            clock.innerHTML = `<h2>${hours12}:${minutes}:${secondsString} ${ampm}</h2>`;
+        }
+        // updates the time every second
+        setInterval(updateClock, 1000);
+
         
 
   
