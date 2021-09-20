@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Mirror</title>
+    <style>
+        body{
+            background-color: #000000;
+            color: #FFFFFF;
+            font-family: "Roboto", sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div id="loading">
+        Loading...
+    </div>
+
+    <div id="timeToWork"></div>
+
+    <div id="weather"></div>
+
+    <div id="news">
+        <h1>News</h1>
+    </div>
+
+    <script>
+        
+        // fetches data from the api
+        async function fetchData() {
+            try {
+                const response = await fetch('http://localhost:3000');
+                const data = await response.json();
+                return data
+            } catch (error) {
+                console.log(error);
+                // sets the background color of the body to red
+                document.body.style.backgroundColor = '#FF0000';
+                
+            }
+        }
+
+        fetchData().then(data => {
+            document.getElementById('loading').remove();
+            document.getElementById('timeToWork').innerHTML = `It will take ${data.timeToWork} to get to work`;
+            // updates the news, providing a p element for each article
+            const news = document.getElementById('news');
+            data.news.forEach(article => {
+                const articleTitle = article.split('By')[0]
+                const articleContent = article.split('GMT')[1]
+                const p = document.createElement('p');
+                p.innerHTML = `<h2>${articleTitle}</h2>${articleContent}`;
+                news.appendChild(p);
+                
+                
+            });
+
+
+        });
+        
+
+  
+
+    </script>
+
+</body>
+</html>

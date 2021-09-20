@@ -3,21 +3,25 @@ const options = {
     home: Deno.env.get('HOMEADDRESS') ?? 'laguna+beach',
     work: Deno.env.get('WORKADDRESS') ?? 'newport+beach',
     articles: Deno.env.get('ARTICLES') ?? 10,
-    location: Deno.env.get('LOCATION') ?? [34.05,-118.24,'America%2FLos_Angeles']
+    location: Deno.env.get('LOCATION') ?? [34.05,-118.24,'America%2FLos_Angeles'],
 }
-console.log(options.location)
+
 // initialize globals
 let time = 0
 let data = {}
 
 // import oak middleware for deno http server
 import { Application } from "https://deno.land/x/oak@v9.0.0/mod.ts";
+import { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
 
 // import Deno DOM for parsing news
 import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.14-alpha/deno-dom-wasm.ts";
 
 // Create a new oak application
 const app = new Application();
+app.use(oakCors({
+    origin: '*',
+}))
 
 // handle GET requests to /
 app.use(async (ctx) => {
@@ -64,7 +68,7 @@ async function callData(){
         data = {
             timeToWork: await getTimeToWork(),
             news: await getNews(),
-            weather: await getWeather()
+            weather: await getWeather(),
         }
         console.log('refreshed data at ' + time)
     }
