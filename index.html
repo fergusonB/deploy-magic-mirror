@@ -87,9 +87,11 @@
             const ampm = hours >= 12 ? 'pm' : 'am';
             const hours12 = hours % 12;
             const clock = document.getElementById('clock');
+            // if minutes is less than 10, add a leading 0
+            const minutesString = minutes < 10 ? '0' + minutes : minutes;
             // if seconds is less than 10, add a leading 0
             const secondsString = seconds < 10 ? `0${seconds}` : seconds;
-            clock.innerHTML = `<h2>${hours12}:${minutes}:${secondsString} ${ampm}</h2>`;
+            clock.innerHTML = `<h2>${hours12}:${minutesString}:${secondsString} ${ampm}</h2>`;
         }
         // updates the time every second
         setInterval(updateClock, 1000);
