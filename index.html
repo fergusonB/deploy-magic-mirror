@@ -24,6 +24,9 @@
             text-align: center;
          
         }
+        .currentHour{
+            color:lightgreen;
+        }
     </style>
 </head>
 <body>
@@ -127,8 +130,10 @@
                     <th>Clouds</th>
                 </tr>`]
             for (let i=0;i<25;i++){
+                let hour = new Date()
+                hour = hour.getHours()
                 weatherTable.push(`
-                <tr>
+                ${i === hour? '<tr class="currentHour">' : '<tr>'}
                     <td>${data.weather.hourly.time[i].split('T')[1]}</td>
                     <td>${data.weather.hourly.apparent_temperature[i].toFixed(0)}</td>
                     <td>${data.weather.hourly.precipitation[i]}</td>
@@ -169,6 +174,11 @@
 
         
 
+        //refresh page every 30 minutes
+        setInterval(function(){
+            location.reload();
+        }, 1800000);
+        
   
 
     </script>
