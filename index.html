@@ -19,6 +19,11 @@
             padding: 1em;
 
         }
+        table{
+
+            text-align: center;
+         
+        }
     </style>
 </head>
 <body>
@@ -37,7 +42,20 @@
             <h2>News</h2>
         </div>
 
-        <div id="weather"></div>
+        <div id="weather">
+            <h2>Weather</h2>
+            <p>
+                High: <span id="high"></span>
+                <br>
+                Low: <span id="low"></span>
+            </p>
+
+            <table id="weatherTable">
+
+
+            </table>
+
+        </div>
 
   
     </div>
@@ -72,8 +90,61 @@
                 
                 
             });
-            // updates the weather
             
+
+            //weather data
+            
+            const high = ()=>{
+                let highest = 0;
+                for (let i=0;i<25;i++){
+                    if (data.weather.hourly.apparent_temperature[i] > highest){
+                        highest = data.weather.hourly.apparent_temperature[i]
+                    }
+                }
+                //update high
+                document.getElementById('high').innerHTML = `${highest}`;
+            }
+            high()
+            const low = ()=>{
+                let lowest = 1000;
+                for (let i=0;i<25;i++){
+                    if (data.weather.hourly.apparent_temperature[i] < lowest){
+                        lowest = data.weather.hourly.apparent_temperature[i]
+                    }
+                }
+                //update low
+                document.getElementById('low').innerHTML = `${lowest}`;
+            }
+            low()
+
+            let weatherTable = [`
+            <tr>
+                    <th>Time</th>
+                    <th>Temperature</th>
+                    <th>Precipitation</th>
+                    <th>Humidity</th>
+                    <th>Wind</th>
+                    <th>Clouds</th>
+                </tr>`]
+            for (let i=0;i<25;i++){
+                weatherTable.push(`
+                <tr>
+                    <td>${data.weather.hourly.time[i].split('T')[1]}</td>
+                    <td>${data.weather.hourly.apparent_temperature[i].toFixed(0)}</td>
+                    <td>${data.weather.hourly.precipitation[i]}</td>
+                    <td>${data.weather.hourly.relativehumitidy_2m[i]}</td>
+                    <td>${data.weather.hourly.windspeed_10m[i]}</td>
+                    <td>${data.weather.hourly.cloudcover[i]}</td>
+                <tr>
+                `)
+
+                //update weathertable
+                document.getElementById('weatherTable').innerHTML = weatherTable.join('');
+
+
+
+            }
+         
 
 
         });
