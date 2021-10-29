@@ -42,7 +42,7 @@
 
         <div id="timeToWork"></div>
         <div id="news">
-            <h2>News</h2>
+   
         </div>
 
         <div id="weather">
@@ -83,16 +83,7 @@
             document.getElementById('loading').remove();
             document.getElementById('timeToWork').innerHTML = `<h2>Commute: ${data.timeToWork}</h2>`;
             // updates the news, providing a p element for each article
-            const news = document.getElementById('news');
-            data.news.forEach(article => {
-                const articleTitle = article.split('By')[0]
-                const articleContent = article.split('GMT')[1]
-                const p = document.createElement('p');
-                p.innerHTML = `<h3>${articleTitle}</h3>${articleContent}`;
-                news.appendChild(p);
-                
-                
-            });
+  
             
 
             //weather data
